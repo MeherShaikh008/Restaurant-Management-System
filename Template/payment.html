@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<section class="layout_padding">
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+
+    <div class="card shadow-lg border-0 text-center p-4" style="max-width:420px; width:100%;">
+      
+      <h2 class="mb-3 text-success">💳 Payment</h2>
+
+        <p>Order ID: <strong>#{{ order.id }}</strong></p>
+
+        <p>Total Amount: <strong>₹ {{ amount }}</strong></p>
+
+      <!-- Razorpay Button -->
+      <form method="POST" action="{% url 'success' %}">
+        {% csrf_token %}
+
+
+        <script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          data-key="rzp_test_VQhEfe2NCXbbwI"
+          data-amount="{{ amount }}00"
+          data-currency="INR"
+          data-order_id="{{ razorpay_order_id }}"
+          data-buttontext="Pay Now"
+          data-name="Food Order"
+          data-description="Order Payment">
+        </script>
+        <input type="hidden" name="order_id" value="{{ order.id }}">
+      </form>
+
+    </div>
+
+  </div>
+</section>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock content %}

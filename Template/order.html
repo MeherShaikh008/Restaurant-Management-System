@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card shadow border-0">
+        <div class="card-body p-4">
+
+          <h2 class="text-center mb-4 fw-bold text-success">
+            🍽 Order Food
+          </h2>
+
+          {% if error %}
+            <div class="alert alert-danger text-center">
+              {{ error }}
+            </div>
+          {% endif %}
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <!-- Customer Details -->
+            <h5 class="mb-3 text-secondary">Customer Details</h5>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Address</label>
+              <textarea name="address" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <!-- Menu -->
+            <h5 class="mb-3 text-secondary">Menu</h5>
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover align-middle">
+                <thead class="table-success text-center">
+                  <tr>
+                    <th>Food Item</th>
+                    <th>Price (₹)</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for food in foods %}
+                  <tr class="text-center">
+                    <td class="fw-semibold">{{ food.name }}</td>
+                    <td>{{ food.price }}</td>
+                    <td style="max-width:120px;">
+                      <input type="number"
+                             name="qty_{{ food.id }}"
+                             class="form-control qty-input text-center"
+                             data-price="{{ food.price }}"
+                             min="0"
+                             value="0">
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Total -->
+            <div class="d-flex justify-content-end mt-3">
+              <div class="alert alert-success fw-bold mb-0">
+                Total Amount: ₹ <span id="totalAmount">0</span>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success btn-lg">
+                Place Order 🍔
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<br>
+
+<!-- JS for total -->
+<script>
+  const qtyInputs = document.querySelectorAll('.qty-input');
+  const totalAmountEl = document.getElementById('totalAmount');
+
+  function calculateTotal() {
+    let total = 0;
+    qtyInputs.forEach(input => {
+      const price = parseFloat(input.dataset.price);
+      const qty = parseInt(input.value) || 0;
+      total += price * qty;
+    });
+    totalAmountEl.innerText = total;
+  }
+
+  qtyInputs.forEach(input => {
+    input.addEventListener('input', calculateTotal);
+  });
+</script>
+
+{% endblock content %}
